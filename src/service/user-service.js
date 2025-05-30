@@ -1,7 +1,8 @@
 import {validate} from "../validation/validation.js";
-import {registerUserValidation} from "../validation/user-validation.js";
+import {loginUserValidation, registerUserValidation} from "../validation/user-validation.js";
 import {prismaClient} from "../application/database.js";
 import {ResponseError} from "../error/response-error.js";
+import {v4 as uuidv4} from "uuid";
 import bcrypt from "bcrypt";
 
 const register = async (req) => {
@@ -9,7 +10,7 @@ const register = async (req) => {
 
     const isUserExist = await prismaClient.user.count({
         where: {
-            username: user.username
+            email: user.email
         }
     });
 
@@ -30,4 +31,41 @@ const register = async (req) => {
     });
 }
 
-export default {register};
+const login = async (req) => {
+    const loginRequest = validate(loginUserValidation, req);
+
+    const isUserExist = await prismaClient.user.findUnique({
+        where: {
+            email: loginRequest.email
+        },
+        select: {
+            email: true,
+            password: true,
+        }
+    });
+
+    if (!isUserExist) {
+        throw new ResponseError(400, 'User does not exist');
+    }
+
+    const isPasswordValid = await bcrypt.compare(loginRequest.password, isUserExist.password);
+
+    if (!isPasswordValid) {
+        throw new ResponseError(400, 'Username or password is incorrect');
+    }
+
+    const token = uuidv4();
+    return prismaClient.user.update({
+        data: {
+            token: token
+        },
+        where: {
+            email: isUserExist.email
+        },
+        select: {
+            token: true
+        }
+    });
+}
+
+export default {register, login};
