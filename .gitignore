@@ -1,3 +1,6 @@
 node_modules/
 .idea/
 /src/generated/prisma
+/prisma
+.env
+db.sql
