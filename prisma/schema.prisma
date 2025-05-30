@@ -18,7 +18,7 @@ model User {
   username   String  @id @db.VarChar(100)
   first_name String  @db.VarChar(100)
   last_name  String  @db.VarChar(100)
-  email      String  @db.VarChar(200)
+  email      String  @unique @db.VarChar(200)
   password   String  @db.VarChar(100)
   token      String? @db.VarChar(100)
   Asset      Asset[]
