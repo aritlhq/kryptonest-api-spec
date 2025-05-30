@@ -9,3 +9,13 @@ Accept: application/json
   "email": "testemail@mail.com",
   "password": "password"
 }
+
+###
+POST http://localhost:3001/api/accounts/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "testemail@mail.com",
+  "password": "password"
+}
