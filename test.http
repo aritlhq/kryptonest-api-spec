@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/accounts
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username" : "testuser",
+  "first_name" : "testfirst_name",
+  "last_name": "testfirst_name",
+  "email": "testemail@mail.com",
+  "password": "password"
+}
