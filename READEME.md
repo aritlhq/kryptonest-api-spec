@@ -13,9 +13,14 @@ JWT_SECRET_KEY=123456
 ```bash
 npm install
 
-npm prisma generate
-npm prisma migrate dev
+npx prisma generate
+npx prisma migrate dev --name <name>
 
 npm run dev
+
+
+# ======== Reset ========
+npx prisma migrate reset
+npx prisma migrate dev --name <name>
 ```
 
