@@ -1,16 +1,19 @@
 import {validate} from "../validation/validation.js";
-import {loginUserValidation, registerUserValidation} from "../validation/user-validation.js";
+import {getUserValidation, loginUserValidation, registerUserValidation} from "../validation/user-validation.js";
 import {prismaClient} from "../application/database.js";
 import {ResponseError} from "../error/response-error.js";
-import {v4 as uuidv4} from "uuid";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const register = async (req) => {
     const user = validate(registerUserValidation, req);
 
     const isUserExist = await prismaClient.user.count({
         where: {
-            email: user.email
+            OR: [
+                {email: user.email},
+                {username: user.username},
+            ]
         }
     });
 
@@ -54,18 +57,40 @@ const login = async (req) => {
         throw new ResponseError(400, 'Username or password is incorrect');
     }
 
-    const token = uuidv4();
-    return prismaClient.user.update({
-        data: {
-            token: token
-        },
-        where: {
-            email: isUserExist.email
-        },
-        select: {
-            token: true
-        }
+    const token = jwt.sign({
+        email: isUserExist.email,
+        password: isPasswordValid
+    }, process.env.JWT_SECRET_KEY, {
+        expiresIn: '10s'
     });
+
+    return {
+        token: token
+    }
 }
 
-export default {register, login};
+const get = async (email) => {
+    email = validate(getUserValidation, email)
+
+    const isUserExist = await prismaClient.user.findUnique({
+        where: {
+            email: email
+        },
+        select: {
+            email: true,
+            username: true,
+        }
+    });
+
+    if (!isUserExist) {
+        throw new ResponseError(400, 'User does not exist');
+    }
+
+    return isUserExist;
+}
+
+export default {
+    register,
+    login,
+    get
+};
