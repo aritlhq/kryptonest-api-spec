@@ -3,9 +3,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username" : "testuser",
-  "first_name" : "testfirst_name",
-  "last_name": "testfirst_name",
+  "username" : "tester",
+  "first_name" : "test first_name",
+  "last_name": "test first_name",
   "email": "testemail@mail.com",
   "password": "password"
 }
@@ -19,3 +19,9 @@ Accept: application/json
   "email": "testemail@mail.com",
   "password": "password"
 }
+
+###
+GET http://localhost:3001/api/accounts/me
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlbWFpbEBtYWlsLmNvbSIsInBhc3N3b3JkIjp0cnVlLCJpYXQiOjE3NDg2Nzc3MTEsImV4cCI6MTc0ODY3NzcyMX0.0bMPRH6MJa0SXc9MD9Vs9o1EeaKwdj7158m9MMALLe0
