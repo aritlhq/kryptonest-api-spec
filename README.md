@@ -10,6 +10,7 @@ SWAGGER_PORT=3000
 JWT_SECRET_KEY=123456
 ```
 
+Install & run
 ```bash
 npm install
 
